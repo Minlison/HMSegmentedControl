@@ -9,44 +9,44 @@
 #import <UIKit/UIKit.h>
 
 @class HMSegmentedControl;
-
+typedef BOOL (^DotShowBlock)(NSInteger index);
 typedef void (^IndexChangeBlock)(NSInteger index);
 typedef NSAttributedString *(^HMTitleFormatterBlock)(HMSegmentedControl *segmentedControl, NSString *title, NSUInteger index, BOOL selected);
 
 typedef NS_ENUM(NSInteger, HMSegmentedControlSelectionStyle) {
-	HMSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
-	HMSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
-	HMSegmentedControlSelectionStyleBox, // A rectangle that covers the whole segment
-	HMSegmentedControlSelectionStyleArrow // An arrow in the middle of the segment pointing up or down depending on `HMSegmentedControlSelectionIndicatorLocation`
+    HMSegmentedControlSelectionStyleTextWidthStripe, // Indicator width will only be as big as the text width
+    HMSegmentedControlSelectionStyleFullWidthStripe, // Indicator width will fill the whole segment
+    HMSegmentedControlSelectionStyleBox, // A rectangle that covers the whole segment
+    HMSegmentedControlSelectionStyleArrow // An arrow in the middle of the segment pointing up or down depending on `HMSegmentedControlSelectionIndicatorLocation`
 };
 
 typedef NS_ENUM(NSInteger, HMSegmentedControlSelectionIndicatorLocation) {
-	HMSegmentedControlSelectionIndicatorLocationUp,
-	HMSegmentedControlSelectionIndicatorLocationDown,
-	HMSegmentedControlSelectionIndicatorLocationNone // No selection indicator
+    HMSegmentedControlSelectionIndicatorLocationUp,
+    HMSegmentedControlSelectionIndicatorLocationDown,
+    HMSegmentedControlSelectionIndicatorLocationNone // No selection indicator
 };
 
 typedef NS_ENUM(NSInteger, HMSegmentedControlSegmentWidthStyle) {
-	HMSegmentedControlSegmentWidthStyleFixed, // Segment width is fixed
-	HMSegmentedControlSegmentWidthStyleDynamic, // Segment width will only be as big as the text width (including inset)
+    HMSegmentedControlSegmentWidthStyleFixed, // Segment width is fixed
+    HMSegmentedControlSegmentWidthStyleDynamic, // Segment width will only be as big as the text width (including inset)
 };
 
 typedef NS_OPTIONS(NSInteger, HMSegmentedControlBorderType) {
-	HMSegmentedControlBorderTypeNone = 0,
-	HMSegmentedControlBorderTypeTop = (1 << 0),
-	HMSegmentedControlBorderTypeLeft = (1 << 1),
-	HMSegmentedControlBorderTypeBottom = (1 << 2),
-	HMSegmentedControlBorderTypeRight = (1 << 3)
+    HMSegmentedControlBorderTypeNone = 0,
+    HMSegmentedControlBorderTypeTop = (1 << 0),
+    HMSegmentedControlBorderTypeLeft = (1 << 1),
+    HMSegmentedControlBorderTypeBottom = (1 << 2),
+    HMSegmentedControlBorderTypeRight = (1 << 3)
 };
 
 enum {
-	HMSegmentedControlNoSegment = -1   // Segment index for no selected segment
+    HMSegmentedControlNoSegment = -1   // Segment index for no selected segment
 };
 
 typedef NS_ENUM(NSInteger, HMSegmentedControlType) {
-	HMSegmentedControlTypeText,
-	HMSegmentedControlTypeImages,
-	HMSegmentedControlTypeTextImages
+    HMSegmentedControlTypeText,
+    HMSegmentedControlTypeImages,
+    HMSegmentedControlTypeTextImages
 };
 
 @interface HMSegmentedControl : UIControl
@@ -54,6 +54,19 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlType) {
 @property (nonatomic, strong) NSArray *sectionTitles;
 @property (nonatomic, strong) NSArray *sectionImages;
 @property (nonatomic, strong) NSArray *sectionSelectedImages;
+
+/**
+ 显示右上角红点
+ */
+@property (copy, nonatomic) DotShowBlock showDotBlock;
+@property (assign, nonatomic) CGPoint dotOffset;
+@property (strong, nonatomic) UIColor *dotColor;
+
+/**
+ 红点大小
+ 默认 {8,8}
+ */
+@property (assign, nonatomic) CGSize dotSize;
 
 /**
  Provide a block to be executed when selected index is changed.
@@ -115,6 +128,7 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlType) {
  Default is `1.0f`
  */
 @property (nonatomic, assign) CGFloat verticalDividerWidth;
+@property (nonatomic, assign) CGFloat verticalDividerHeight;
 
 /**
  Specifies the style of the control
@@ -227,5 +241,5 @@ typedef NS_ENUM(NSInteger, HMSegmentedControlType) {
 - (void)setSelectedSegmentIndex:(NSUInteger)index animated:(BOOL)animated;
 - (void)setIndexChangeBlock:(IndexChangeBlock)indexChangeBlock;
 - (void)setTitleFormatter:(HMTitleFormatterBlock)titleFormatter;
-
+- (void)reloadData;
 @end
